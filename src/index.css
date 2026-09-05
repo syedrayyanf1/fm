@@ -1,0 +1,79 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: #09090b;
+    color: #f4f4f5;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    letter-spacing: -0.01em;
+  }
+
+  /* Dense mono numbers for all statistics & tabular data */
+  .font-mono {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-feature-settings: "tnum";
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Prevent outline flash on mouse clicks while keeping keyboard accessibility */
+  button:focus:not(:focus-visible) {
+    outline: none;
+  }
+}
+
+
+@layer components {
+  /* Linear / Raycast style hairline cards */
+  .hairline-card {
+    @apply bg-zinc-900/40 border border-white/[0.06] rounded-lg transition-colors duration-150;
+  }
+
+  .hairline-card-elevated {
+    @apply bg-zinc-900/80 border border-white/[0.08] rounded-lg shadow-xl shadow-black/50;
+  }
+
+  .hairline-border {
+    @apply border border-white/[0.07];
+  }
+
+  /* Primary Button (White on dark) */
+  .btn-primary {
+    @apply inline-flex items-center justify-center font-medium text-xs sm:text-sm bg-white text-zinc-950 px-3.5 py-1.5 rounded-md hover:bg-zinc-200 active:scale-[0.98] transition-all duration-150 cursor-pointer select-none shadow-sm;
+  }
+
+  /* Secondary / Hairline Button */
+  .btn-secondary {
+    @apply inline-flex items-center justify-center font-medium text-xs sm:text-sm bg-zinc-900/70 hover:bg-zinc-800 text-zinc-200 px-3.5 py-1.5 rounded-md border border-white/[0.08] active:scale-[0.98] transition-all duration-150 cursor-pointer select-none;
+  }
+
+  /* Danger / Emergency Button */
+  .btn-danger {
+    @apply inline-flex items-center justify-center font-medium text-xs sm:text-sm bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/20 px-3.5 py-1.5 rounded-md active:scale-[0.98] transition-all duration-150 cursor-pointer select-none;
+  }
+
+  /* Quiet Chip / Tag */
+  .quiet-chip {
+    @apply inline-flex items-center px-2 py-0.5 text-[11px] font-mono rounded bg-white/[0.04] border border-white/[0.06] text-zinc-400;
+  }
+}
+
+/* Subtle, whisper-quiet scrollbars */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
