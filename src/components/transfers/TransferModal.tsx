@@ -40,44 +40,37 @@ export default function TransferModal() {
   const targetFromList = targets.find(t => t.id === transferTargetId);
   const playerFromDb = transferTargetId ? players[transferTargetId] : undefined;
 
-  const target = targetFromList || (playerFromDb ? {
-    id: playerFromDb.id,
-    playerId: playerFromDb.id,
-    name: playerFromDb.name,
-    photoUrl: playerFromDb.photoUrl,
-    clubName: clubs[playerFromDb.clubId]?.name || 'Current Club',
-    clubId: playerFromDb.clubId,
-    position: playerFromDb.primaryPosition,
-    age: playerFromDb.age,
-    nationality: playerFromDb.nationality,
-    fogRange: `${playerFromDb.overallRating}`,
-    exactOvr: playerFromDb.overallRating,
-    estFeeFormatted: `€${(playerFromDb.marketValue / 1e6).toFixed(1)}M`,
-    wageEstimateFormatted: `€${(playerFromDb.wagePerWeek / 1e3).toFixed(0)}k/wk`,
-    scoutConfidenceText: 'Dossier Available',
-    scoutPercent: 100,
-    baseFee: Math.max(1, Math.round(playerFromDb.marketValue / 1e6)),
-    addons: Math.round((playerFromDb.marketValue * 0.15) / 1e6),
-    weeklyWage: playerFromDb.wagePerWeek,
-    attributes: playerFromDb.attributes,
-    traits: playerFromDb.traits,
-  } : undefined);
+  const target = React.useMemo(() => {
+    if (targetFromList) return targetFromList;
+    if (!playerFromDb) return undefined;
+    return {
+      id: playerFromDb.id,
+      playerId: playerFromDb.id,
+      name: playerFromDb.name,
+      photoUrl: playerFromDb.photoUrl,
+      clubName: clubs[playerFromDb.clubId]?.name || 'Current Club',
+      clubId: playerFromDb.clubId,
+      position: playerFromDb.primaryPosition,
+      age: playerFromDb.age,
+      nationality: playerFromDb.nationality,
+      fogRange: `${playerFromDb.overallRating}`,
+      exactOvr: playerFromDb.overallRating,
+      estFeeFormatted: `€${(playerFromDb.marketValue / 1e6).toFixed(1)}M`,
+      wageEstimateFormatted: `€${(playerFromDb.wagePerWeek / 1e3).toFixed(0)}k/wk`,
+      scoutConfidenceText: 'Dossier Available',
+      scoutPercent: 100,
+      baseFee: Math.max(1, Math.round(playerFromDb.marketValue / 1e6)),
+      addons: Math.round((playerFromDb.marketValue * 0.15) / 1e6),
+      weeklyWage: playerFromDb.wagePerWeek,
+      attributes: playerFromDb.attributes,
+      traits: playerFromDb.traits,
+    };
+  }, [targetFromList, playerFromDb, clubs]);
 
   // Form State
   const initialBaseFee = target?.baseFee ? target.baseFee * 1_000_000 : (playerFromDb?.marketValue || 50_000_000);
   const [baseFee, setBaseFee] = useState<number>(initialBaseFee);
   const [installments, setInstallments] = useState<1 | 2 | 3>(1);
-
-  React.useEffect(() => {
-    if (target) {
-      const fee = target.baseFee ? target.baseFee * 1_000_000 : (playerFromDb?.marketValue || 50_000_000);
-      setBaseFee(fee);
-      setWeeklyWage(target.weeklyWage || playerFromDb?.wagePerWeek || 150_000);
-      setNegotiationStatus('EDITING');
-      setCounterDetails(null);
-      setRivalBidDetails(null);
-    }
-  }, [transferTargetId, isTransferModalOpen]);
   const [addons, setAddons] = useState<TransferAddons>({
     appearances30: false,
     appearancesAmount: 5_000_000,
@@ -101,6 +94,17 @@ export default function TransferModal() {
   >('EDITING');
   const [counterDetails, setCounterDetails] = useState<{ fee: number; sellOn: number; note: string } | null>(null);
   const [rivalBidDetails, setRivalBidDetails] = useState<RivalClubBid | null>(null);
+
+  React.useEffect(() => {
+    if (isTransferModalOpen && target) {
+      const fee = target.baseFee ? target.baseFee * 1_000_000 : (playerFromDb?.marketValue || 50_000_000);
+      setBaseFee(fee);
+      setWeeklyWage(target.weeklyWage || playerFromDb?.wagePerWeek || 150_000);
+      setNegotiationStatus('EDITING');
+      setCounterDetails(null);
+      setRivalBidDetails(null);
+    }
+  }, [transferTargetId, isTransferModalOpen]);
 
   if (!isTransferModalOpen || !target) return null;
 

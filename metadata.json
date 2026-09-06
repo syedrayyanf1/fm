@@ -1,0 +1,6 @@
+{
+  "name": "FC Barcelona — Football Management",
+  "description": "A quiet, modern Football Management interface built for tactical precision.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
